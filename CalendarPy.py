@@ -10,18 +10,26 @@ def DayText(Day):
 
 def MonthText(Month):
     months =["January","February","March","April","May","June", "July","August","September","October","November","December"]
-    return months[Month]
+    return months[Month-1]
 
-def MaxFont(draw,text,rect):
+def MaxFont(draw,text,rect,mono=False):
+    Font="arial.ttf"
+    if mono: 
+        Font="cour.ttf"
+    #print(text)
+    #print(rect)
     i=1
-    font=ImageFont.truetype("arial.ttf",i)
-    while (draw.textsize(text,font)[0]<rect[2]-rect[0] and
-           draw.textsize(text,font)[1]<rect[3]-rect[1]):
+    font=ImageFont.truetype(Font,i)
+    #font=ImageFont.truetype(,i)
+    while (draw.textsize(text,font)[0]<(rect[2]-rect[0]) and
+           draw.textsize(text,font)[1]<(rect[3]-rect[1])):
         i+=1
-        font=ImageFont.truetype("arial.ttf",i)
+        font=ImageFont.truetype(Font,i)
+        #print(draw.textsize(text,font))
         #print(i)
+
     if font.size>3:
-        font=ImageFont.truetype("arial.ttf",i-2)
+        font=ImageFont.truetype(Font,i)
     return font
 
 def GetCentered(draw,text,font,rect):
@@ -48,18 +56,18 @@ def Calendar(year,month):
     PrevSmallCalendarRect = (2*Margin, Margin, Margin+ Header + Margin - HeaderCellHeight, Margin + Header + Margin - HeaderCellHeight)
     smallPrevBegin=(PrevSmallCalendarRect[0],PrevSmallCalendarRect[1])
     smallPrev=calendar.TextCalendar(6).formatmonth(year,month-1)
-    font=MaxFont(draw,smallPrev,PrevSmallCalendarRect)
+    font=MaxFont(draw,smallPrev,PrevSmallCalendarRect,True)
     draw.text(smallPrevBegin,smallPrev,(0,0,0),font=font)
 
     #Draw small next month
     NextSmallCalendarRect = (Width-(2 * Margin+Header + Margin - HeaderCellHeight), Margin, Width-(2 * Margin+Header + Margin - HeaderCellHeight) + Header + Margin - HeaderCellHeight, Margin + Header + Margin - HeaderCellHeight)
     smallNextBegin=NextSmallCalendarRect[:2]
     smallNext=calendar.TextCalendar(6).formatmonth(year,month+1)
-    font=MaxFont(draw,smallNext,NextSmallCalendarRect)
+    font=MaxFont(draw,smallNext,NextSmallCalendarRect,True)
     #print(NextSmallCalendarRect)
     #print(draw.textsize(smallNext,font))
     #print(font.size)
-    draw.text(smallNextBegin,smallPrev,(0,0,0),font=font)
+    draw.text(smallNextBegin,smallNext,(0,0,0),font=font)
 
 
     #Draw day labels
@@ -78,7 +86,7 @@ def Calendar(year,month):
     Weeks=len(Days)
     CellWidth = (Width - 2 * Margin) // 7
     CellHeight = (Height - 2 * Margin-Header) // Weeks
-    Padding=5
+    Padding=int(CellWidth*.05)
     for week in range(Weeks):
         for Day in range(7):
             DaysRect = (Margin + CellWidth * Day, Header + Margin+CellHeight*week, Margin + CellWidth * Day + CellWidth, Header + Margin+CellHeight*week + CellHeight)
