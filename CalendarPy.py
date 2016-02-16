@@ -67,6 +67,7 @@ def Calendar(year,month):
     draw.text(smallNextBegin,smallPrev,(0,0,0),font=font)
 
 
+    #Draw day labels
     DaysLabelRect = (Margin + HeaderCellWidth * 3, Header + Margin - HeaderCellHeight, Margin + HeaderCellWidth * 3 + HeaderCellWidth, Header + Margin - HeaderCellHeight + HeaderCellHeight)
     font=MaxFont(draw,DayText(3),DaysLabelRect)
     for Day in range(7):
@@ -82,16 +83,15 @@ def Calendar(year,month):
     Weeks=len(Days)
     CellWidth = (Width - 2 * Margin) // 7
     CellHeight = (Height - 2 * Margin-Header) // Weeks
-
-
-    
+    Padding=5
     for week in range(Weeks):
         for Day in range(7):
             DaysRect = (Margin + CellWidth * Day, Header + Margin+CellHeight*week, Margin + CellWidth * Day + CellWidth, Header + Margin+CellHeight*week + CellHeight)
             draw.rectangle(DaysRect,outline=(0,0,0))
+            DaysTextRect = [x+Padding for x in DaysRect]
 
             if Days[week][Day]>0:
-                draw.text(DaysRect,str(Days[week][Day]),(0,0,0),font=font)
+                draw.text(DaysTextRect,str(Days[week][Day]),(0,0,0),font=font)
 
 
     #Draw Header
