@@ -95,8 +95,11 @@ def Calendar(year,month):
 
 
     #Draw Header
+    Padding=int(Width*.1)
     HeaderText=MonthText(month)+" " + str(year)
-    HeaderRect = (Margin, Margin, Margin + Width - 2 * Margin, Margin + Header - HeaderCellHeight)
+    #HeaderRect = (Margin, Margin, Margin + Width - 2 * Margin, Margin + Header - HeaderCellHeight)
+    HeaderRect = (PrevSmallCalendarRect[2]+Padding,PrevSmallCalendarRect[1],NextSmallCalendarRect[0]-Padding,NextSmallCalendarRect[3])
+    print(HeaderRect)
     font=MaxFont(draw,HeaderText,HeaderRect)
     draw.text(HeaderRect,HeaderText,(0,0,0),font=font)
 
