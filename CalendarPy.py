@@ -20,7 +20,8 @@ def MaxFont(draw,text,rect):
         i+=1
         font=ImageFont.truetype("arial.ttf",i)
         #print(i)
-    font=ImageFont.truetype("arial.ttf",i-2)
+    if font.size>3:
+        font=ImageFont.truetype("arial.ttf",i-2)
     return font
 
 def GetCentered(draw,text,font,rect):
@@ -44,26 +45,20 @@ def Calendar(year,month):
     HeaderCellHeight =(Height-2*Margin)//20
 
     #Draw samll previous month
-    PrevSmallCalendarRect = (2*Margin, Margin, Header + Margin - HeaderCellHeight, Header + Margin - HeaderCellHeight)
-    smallPrevBegin=(2*Margin,Margin)
+    PrevSmallCalendarRect = (2*Margin, Margin, Margin+ Header + Margin - HeaderCellHeight, Margin + Header + Margin - HeaderCellHeight)
+    smallPrevBegin=(PrevSmallCalendarRect[0],PrevSmallCalendarRect[1])
     smallPrev=calendar.TextCalendar(6).formatmonth(year,month-1)
-
-    #i=1
-    #font=ImageFont.truetype("arial.ttf",i)
-    #while (draw.textsize(smallPrev,font)[0]<PrevSmallCalendarRect[2]-PrevSmallCalendarRect[0] and
-    #       draw.textsize(smallPrev,font)[1]<PrevSmallCalendarRect[3]-PrevSmallCalendarRect[1]):
-    #    i+=1
-    #    font=ImageFont.truetype("arial.ttf",i)
-    #    print(i)
-    #font=ImageFont.truetype("arial.ttf",i-1)
     font=MaxFont(draw,smallPrev,PrevSmallCalendarRect)
     draw.text(smallPrevBegin,smallPrev,(0,0,0),font=font)
 
     #Draw small next month
-    NextSmallCalendarRect = (Width-(2 * Margin+Header + Margin - HeaderCellHeight), Margin, Header + Margin - HeaderCellHeight, Header + Margin - HeaderCellHeight)
-    smallNextBegin=(Width-(2 * Margin+Header + Margin - HeaderCellHeight), Margin)
+    NextSmallCalendarRect = (Width-(2 * Margin+Header + Margin - HeaderCellHeight), Margin, Width-(2 * Margin+Header + Margin - HeaderCellHeight) + Header + Margin - HeaderCellHeight, Margin + Header + Margin - HeaderCellHeight)
+    smallNextBegin=NextSmallCalendarRect[:2]
     smallNext=calendar.TextCalendar(6).formatmonth(year,month+1)
-    font=ImageFont.truetype("arial.ttf",20)
+    font=MaxFont(draw,smallNext,NextSmallCalendarRect)
+    #print(NextSmallCalendarRect)
+    #print(draw.textsize(smallNext,font))
+    #print(font.size)
     draw.text(smallNextBegin,smallPrev,(0,0,0),font=font)
 
 
@@ -99,14 +94,14 @@ def Calendar(year,month):
     HeaderText=MonthText(month)+" " + str(year)
     #HeaderRect = (Margin, Margin, Margin + Width - 2 * Margin, Margin + Header - HeaderCellHeight)
     HeaderRect = (PrevSmallCalendarRect[2]+Padding,PrevSmallCalendarRect[1],NextSmallCalendarRect[0]-Padding,NextSmallCalendarRect[3])
-    print(HeaderRect)
+
     font=MaxFont(draw,HeaderText,HeaderRect)
     draw.text(HeaderRect,HeaderText,(0,0,0),font=font)
 
 
 
     cal.save("image.png")
-
+    cal.show()
 
 if __name__ == "__main__":
     #for i in range(1,13):
