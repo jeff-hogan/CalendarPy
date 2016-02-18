@@ -39,6 +39,18 @@ def GetCentered(draw,text,font,rect):
     w,h=draw.textsize(text,font)
     return ( rect[0]+(W-w)//2,rect[1]+(H-h)//2 )
 
+#Make rectangle on pixel smaller
+def Shrink(rectangle):
+    return (rectangle[0]+1,rectangle[1]+1,
+            rectangle[2]-1,rectangle[3]-1)
+
+#Draw thinker boardered rectangle
+def DrawRectangle(draw,rectangle,width=1):
+    for i in range(width):
+        draw.rectangle(rectangle,outline=(0,0,0))
+        rectangle=Shrink(rectangle)
+
+
 def Calendar(year,month):
     dpi = 300
     
@@ -56,7 +68,11 @@ def Calendar(year,month):
     #Draw samll previous month
     PrevSmallCalendarRect = (2*Margin, Margin, 2*Margin+ Header + Margin - HeaderCellHeight, Header + Margin - HeaderCellHeight)
     smallPrevBegin=PrevSmallCalendarRect[:2]
-    smallPrev=calendar.TextCalendar(6).formatmonth(year,month-1)
+    
+    if month==1:
+        smallPrev=calendar.TextCalendar(6).formatmonth(year-1,12)
+    else:
+        smallPrev=calendar.TextCalendar(6).formatmonth(year,month-1)
     font=MaxFont(draw,smallPrev,PrevSmallCalendarRect,True)
     draw.text(smallPrevBegin,smallPrev,(0,0,0),font=font)
 
@@ -65,7 +81,11 @@ def Calendar(year,month):
     NextSmallCalendarRect[0]=Width-2*Margin-(PrevSmallCalendarRect[2]-PrevSmallCalendarRect[0])
     NextSmallCalendarRect[2]=Width-2*Margin
     smallNextBegin=NextSmallCalendarRect[:2]
-    smallNext=calendar.TextCalendar(6).formatmonth(year,month+1)
+    
+    if month==12:
+        smallNext=calendar.TextCalendar(6).formatmonth(year+1,1)
+    else:
+        smallNext=calendar.TextCalendar(6).formatmonth(year,month+1)
     font=MaxFont(draw,smallNext,NextSmallCalendarRect,True)
     draw.text(smallNextBegin,smallNext,(0,0,0),font=font)
 
@@ -82,8 +102,8 @@ def Calendar(year,month):
         DaysLabelRect = (Margin + HeaderCellWidth * Day, Header + Margin - HeaderCellHeight, Margin + HeaderCellWidth * Day + HeaderCellWidth, Header + Margin - HeaderCellHeight + HeaderCellHeight)
         DaysTextLabelRect=[DaysLabelRect[0]+Padding,DaysLabelRect[1]+Padding,DaysLabelRect[2]-Padding,DaysLabelRect[3]-Padding]
 
-        draw.rectangle(DaysLabelRect,outline=(0,0,0))
-        #draw.text(DaysLabelRect,DayText(Day),(0,0,0),font=font)
+        #draw.rectangle(DaysLabelRect,outline=(0,0,0))
+        DrawRectangle(draw,DaysLabelRect,3)
         draw.text(GetCentered(draw,DayText(Day),font,DaysTextLabelRect),DayText(Day),(0,0,0),font=font)
         
 
@@ -97,7 +117,8 @@ def Calendar(year,month):
     for week in range(Weeks):
         for Day in range(7):
             DaysRect = (Margin + CellWidth * Day, Header + Margin+CellHeight*week, Margin + CellWidth * Day + CellWidth, Header + Margin+CellHeight*week + CellHeight)
-            draw.rectangle(DaysRect,outline=(0,0,0))
+            #draw.rectangle(DaysRect,outline=(0,0,0))
+            DrawRectangle(draw,DaysRect,3)
             DaysTextRect = [x+Padding for x in DaysRect]
 
             if Days[week][Day]>0:
@@ -122,4 +143,9 @@ if __name__ == "__main__":
     #for i in range(1,13):
         #print(i,calendar.Calendar(6).monthdayscalendar(2016,i))
     #print(calendar.TextCalendar(6).formatmonth(2016,2))
-    Calendar(2016,2)
+    
+    #for m in range(1,13):
+    #    print(m)
+    #    Calendar(2016,m)
+    today=datetime.datetime.now()
+    Calendar(today.year,today.month)
