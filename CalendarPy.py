@@ -144,8 +144,8 @@ if __name__ == "__main__":
         #print(i,calendar.Calendar(6).monthdayscalendar(2016,i))
     #print(calendar.TextCalendar(6).formatmonth(2016,2))
     
-    #for m in range(1,13):
-    #    print(m)
-    #    Calendar(2016,m)
-    today=datetime.datetime.now()
-    Calendar(today.year,today.month)
+    for m in range(1,13):
+        print(m)
+        Calendar(2016,m)
+    #today=datetime.datetime.now()
+    #Calendar(today.year,today.month)
